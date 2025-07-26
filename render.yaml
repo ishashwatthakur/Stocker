@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: stocker-pro
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: ./start.sh
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: PYTHON_VERSION
+        value: 3.9.16
