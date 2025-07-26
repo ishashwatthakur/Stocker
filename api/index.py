@@ -13,6 +13,8 @@ from typing import List, Optional
 from bs4 import BeautifulSoup
 import json
 import re
+import logging
+logging.basicConfig(level=logging.INFO)
 
 app = FastAPI(
     title="Stocker ",
@@ -23,7 +25,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://your-app-name.onrender.com",  # Your Render URL
+        "https://stocker-c22v.onrender.com/",  # Your Render URL
         "http://localhost:8000"                # For local testing
     ],
     allow_methods=["*"],
@@ -143,6 +145,7 @@ async def get_nse_symbols():
 @app.get("/api/stock-data/{symbol}")
 async def get_stock_data(symbol: str, start_date: str, end_date: str):
     cache_key = f"stock_{symbol}_{start_date}_{end_date}"
+    logging.info(f"Fetching {symbol} from {start_date} to {end_date}")
     if cached := get_cache(cache_key):
         return cached
 
@@ -157,6 +160,8 @@ async def get_stock_data(symbol: str, start_date: str, end_date: str):
             start_dt = datetime.datetime.combine(today, datetime.time.min)
         if end_dt.date() > today:
             end_dt = datetime.datetime.combine(today, datetime.time.min)
+        if not symbol.isalpha():
+            raise HTTPException(status_code=400, detail="Invalid symbol format")
         
         # Ensure start is before end
         if start_dt > end_dt:
