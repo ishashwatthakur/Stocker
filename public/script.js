@@ -111,46 +111,28 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const fetchAllData = async () => {
-    state.currentTicker = elements.stockSelect.value;
-    if (!state.currentTicker) return;
-
-    // Ensure we have valid dates
-    if (!state.startDate) {
-        setActiveRange('1y');
+  if (!state.currentTicker) return;
+  
+  toggleLoading(true);
+  
+  try {
+    const url = `${API_BASE_URL}/api/stock-data/${state.currentTicker}?start_date=${state.startDate}&end_date=${state.endDate}`;
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ detail: "Unknown error" }));
+      throw new Error(err.detail || `HTTP ${response.status}`);
     }
     
-    toggleLoading(true);
-    hideMessage();
+    const data = await response.json();
+    renderAll(data);
     
-    try {
-        const url = `${API_BASE_URL}/api/stock-data/${state.currentTicker}?start_date=${state.startDate}&end_date=${state.endDate}`;
-        const response = await fetch(url);
-        
-        if (response.status === 404) {
-            // Try with default date range
-            setActiveRange('1y');
-            await fetchAllData();
-            return;
-        }
-        
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.detail || 'Failed to fetch data');
-        }
-        
-        const data = await response.json();
-        renderAll(data);
-        fetchSimilarStocks();
-        fetchAndRenderNews();
-        updatePortfolioValues();
-
-    } catch (error) {
-        showMessage(`Error: ${error.message}`, 'error');
-        elements.chartsContainer.style.display = 'none';
-        elements.infoContainer.style.display = 'none';
-    } finally {
-        toggleLoading(false);
-    }
+  } catch (error) {
+    showMessage(`Failed to load data: ${error.message}`, 'error');
+    console.error("Fetch error:", error);
+  } finally {
+    toggleLoading(false);
+  }
 };
 
     const fetchSimilarStocks = async () => {
@@ -502,53 +484,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const setActiveRange = (range, button) => {
-    document.querySelectorAll('.btn-range').forEach(btn => btn.classList.remove('active'));
-    if(button) button.classList.add('active');
-
-    const end = new Date();
-    let start = new Date();
-    
-    switch (range) {
-        case '1d': 
-            start.setDate(end.getDate() - 1);
-            // Ensure we have at least 5 days of data for indicators
-            if (state.currentTicker) {
-                const tempStart = new Date(start);
-                tempStart.setDate(start.getDate() - 5);
-                state.startDate = formatDate(tempStart);
-            } else {
-                state.startDate = formatDate(start);
-            }
-            break;
-        case '5d': 
-            start.setDate(end.getDate() - 5);
-            state.startDate = formatDate(start);
-            break;
-        case '1m': 
-            start.setMonth(end.getMonth() - 1);
-            state.startDate = formatDate(start);
-            break;
-        case '6m': 
-            start.setMonth(end.getMonth() - 6);
-            state.startDate = formatDate(start);
-            break;
-        case '1y': 
-            start.setFullYear(end.getFullYear() - 1);
-            state.startDate = formatDate(start);
-            break;
-        case '5y': 
-            start.setFullYear(end.getFullYear() - 5);
-            state.startDate = formatDate(start);
-            break;
-        case 'max': 
-            state.startDate = '2000-01-01';
-            break;
-    }
-
-    state.endDate = formatDate(end);
-    elements.startDateInput.value = state.startDate;
-    elements.endDateInput.value = state.endDate;
+    const setActiveRange = (range) => {
+  const end = new Date();
+  let start = new Date();
+  
+  switch (range) {
+    case '1d': start.setDate(end.getDate() - 1); break;
+    case '5d': start.setDate(end.getDate() - 5); break;
+    case '1m': start.setMonth(end.getMonth() - 1); break;
+    case '6m': start.setMonth(end.getMonth() - 6); break;
+    case '1y': start.setFullYear(end.getFullYear() - 1); break;
+    case '5y': start.setFullYear(end.getFullYear() - 5); break;
+    case 'max': start = new Date('2000-01-01'); break;
+  }
+  
+  state.startDate = start.toISOString().split('T')[0];
+  state.endDate = end.toISOString().split('T')[0];
 };
 
     const handleCustomDateChange = () => {

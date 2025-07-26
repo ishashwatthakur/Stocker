@@ -584,8 +584,10 @@ body {
 .message-box {
   padding: 1rem;
   border-radius: var(--border-radius);
-  text-align: center;
-  font-weight: 600;
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--color-accent-red);
+  margin: 1rem 0;
+  border-left: 4px solid var(--color-accent-red);
 }
 
 .message-box.error {
@@ -594,8 +596,9 @@ body {
 }
 
 .message-box.success {
-  background-color: rgba(63, 185, 80, 0.15);
-  color: var(--color-up);
+  background: rgba(16, 185, 129, 0.15);
+  border-left-color: var(--color-accent-green);
+  color: var(--color-accent-green);
 }
 
 /* ===== Responsive Design ===== */
