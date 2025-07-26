@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stocker | An Stock Analysis</title>
+    <title>Stocker | Advanced Stock Analysis</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -18,31 +18,29 @@
 
     <div class="main-grid">
         <header class="main-header">
-            <h1 class="header-title">STOCKER </h1>
+            <h1 class="header-title">STOCKER <span>PRO</span></h1>
             <div class="stock-selector-wrapper">
                 <select id="stock-select" class="select-box"></select>
             </div>
         </header>
 
         <aside class="sidebar" id="portfolio-section">
-  <div class="portfolio-header">
-    <h2 class="sidebar-title">Portfolio</h2>
-    <button id="toggle-portfolio" class="btn-icon">▼</button>
-  </div>
-  <div class="portfolio-content">
-    <div class="portfolio-input-area">
-      <textarea id="portfolio-input" placeholder="SYMBOL:QTY, SYMBOL:QTY"></textarea>
-      <button id="save-portfolio-btn" class="btn">Save</button>
-    </div>
-    <div id="portfolio-list" class="portfolio-list">
-      <p class="no-portfolio">Add stocks to portfolio</p>
-    </div>
-    <div class="portfolio-summary">
-      <h3>Total Value</h3>
-      <p id="portfolio-total-value">₹0.00</p>
-    </div>
-  </div>
-</aside>
+            <div class="portfolio-header">
+                <h2 class="sidebar-title">Portfolio</h2>
+                <button id="toggle-portfolio" class="btn-icon">▼</button>
+            </div>
+            <div class="portfolio-content">
+                <div class="portfolio-input-area">
+                    <textarea id="portfolio-input" rows="2" placeholder="SYMBOL:QTY, SYMBOL:QTY"></textarea>
+                    <button id="save-portfolio-btn" class="btn">Save</button>
+                </div>
+                <div id="portfolio-list" class="portfolio-list"></div>
+                <div class="portfolio-summary">
+                    <h3>Total Value</h3>
+                    <p id="portfolio-total-value">₹0.00</p>
+                </div>
+            </div>
+        </aside>
 
         <main class="main-content">
             <div class="controls-bar card">
@@ -154,7 +152,7 @@
         </main>
         
         <footer class="main-footer">
-            <p>&copy; 2025 Stocker | An Stock Analysis</p>
+            <p>&copy; 2025 Stocker | Advanced Stock Analysis</p>
             <p class="disclaimer">Data provided by Yahoo Finance. Not financial advice.</p>
         </footer>
     </div>
